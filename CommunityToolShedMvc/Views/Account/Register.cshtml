@@ -10,24 +10,35 @@
 {
     @Html.ValidationSummary()
 
-    <div>
-        @Html.LabelFor(m => m.FirstName)
-        @Html.TextBoxFor(m => m.FirstName)
+    <div class="form-group row">
+        <div class="col-xs-3 ml-3">
+            @Html.LabelFor(m => m.FirstName)
+            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+        </div>
+        <div class="col-xs-3 ml-3">
+            @Html.LabelFor(m => m.LastName)
+            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-xs-3 ml-3">
+            @Html.LabelFor(m => m.Email)
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-xs-3 ml-3">
+            @Html.LabelFor(m => m.Password)
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+        </div>
     </div>
 
     <div>
-        @Html.LabelFor(m => m.Email)
-        @Html.TextBoxFor(m => m.Email)
-    </div>
-
-    <div>
-        @Html.LabelFor(m => m.Password)
-        @Html.PasswordFor(m => m.Password)
-    </div>
-
-    <div>
-        <button type="submit">Register</button>
+        <button type="submit" class="btn btn-success btn-lg">Submit</button>
     </div>
 }
 
-<p>@Html.ActionLink("Login", "Login")</p>
+<br />
+<p>@Html.ActionLink("Already have an account? Click here to sign in!", "Login")</p>
