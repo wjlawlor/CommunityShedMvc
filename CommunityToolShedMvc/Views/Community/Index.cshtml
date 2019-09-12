@@ -1,0 +1,62 @@
+﻿@model IList<CommunityToolShedMvc.Models.Community>
+
+@{
+    ViewBag.Title = "Community Homepage";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<h3>Communities You Own</h3>
+<div id="OwnerTable">
+    <table class="table border table-sm">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Owner</th>
+                <th>Type</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var community in Model)
+            {
+                if (community.OwnerID == (((CommunityToolShedMvc.Security.CustomPrincipal)User).Person.Id)){
+                    <tr>
+                        <td>@community.Name</td>
+                        <td>@community.OwnerName</td>
+                        <td>@community.TypeName</td>
+                        <td>@Html.ActionLink("View", "Overview", "Community",  new { id = community.ID }, null)</td>
+                    </tr>
+                } 
+            }
+        </tbody>
+    </table>
+</div>
+
+<h3>Other Communities</h3>
+<div id="EveryTable">
+    <table class="table border table-sm">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Owner</th>
+                <th>Type</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var community in Model)
+            {
+                if (community.OwnerID != (((CommunityToolShedMvc.Security.CustomPrincipal)User).Person.Id))
+                {
+                    <tr>
+                        <td>@community.Name</td>
+                        <td>@community.OwnerName</td>
+                        <td>@community.TypeName</td>
+                        <td>@Html.ActionLink("View", "Overview", "Community", new { id = community.ID }, null)</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
