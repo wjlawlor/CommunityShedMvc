@@ -1,19 +1,17 @@
 ﻿using CommunityToolShedMvc.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace CommunityToolShedMvc.ViewModels
 {
-    public class CommunityWithTypes
+    public class CommunityOwnerTypes
     {
-        public CommunityWithTypes() { }
+        public CommunityOwnerTypes() { }
 
-        public CommunityWithTypes(List<CommunityType> communityTypes)
+        public CommunityOwnerTypes(List<CommunityType> communityTypes, Person person)
         {
             SetCommunityTypes(communityTypes);
+            Person = person;
 
             //var selectListItems = new SelectListItem[]
             //{
@@ -24,6 +22,8 @@ namespace CommunityToolShedMvc.ViewModels
         }
 
         public Community Community { get; set; }
+
+        public Person Person { get; set; }
 
         public SelectList TypeSelectList { get; set; }
 

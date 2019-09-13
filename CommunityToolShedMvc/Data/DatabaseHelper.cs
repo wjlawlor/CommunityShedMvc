@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Reflection;
-using System.Web;
 
 namespace CommunityToolShedMvc.Data
 {
@@ -55,7 +53,15 @@ namespace CommunityToolShedMvc.Data
                             if (property.CanWrite && dataReaderColumnNames.Contains(propertyName))
                             {
                                 object value = dr[propertyName];
-                                property.SetValue(model, value);
+                                if (value is DBNull)
+                                {
+                                    property.SetValue(model, "");
+                                }
+                                else
+                                {
+                                    property.SetValue(model, value);
+                                }
+
                             }
                         }
 

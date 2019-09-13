@@ -2,16 +2,13 @@
 using CommunityToolShedMvc.Models;
 using CommunityToolShedMvc.Security;
 using CommunityToolShedMvc.ViewModels;
-using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace CommunityToolShedMvc.Controllers
 {
+    [Authorize]
     public class CommunityController : Controller
     {
         public ActionResult Index()
@@ -54,9 +51,22 @@ namespace CommunityToolShedMvc.Controllers
                     new SqlParameter("@ID", id)
                 );
 
+            List<Tool> tools = DatabaseHelper.Retrieve<Tool>(@"
+                    SELECT Tool.ID, Tool.[Name], OwnerID, CONCAT(Person.FirstName, ' ', Person.LastName) AS OwnerName, 
+                        ConditionID, Condition.[Name] AS ConditionName, Warnings
+                    FROM Tool
+                    JOIN Shed ON Shed.ToolID = Tool.ID
+                    JOIN Person ON Person.ID = Tool.OwnerID
+                    JOIN Condition ON Condition.ID = Tool.ConditionID
+                    WHERE Shed.CommunityID = @ID
+                ",
+                    new SqlParameter("@ID", id)
+                );
+
             var viewModel = new CommunityMembersTools();
             viewModel.Community = community;
             viewModel.Members = members;
+            viewModel.Tools = tools;
 
             return View(viewModel);
         }
@@ -69,13 +79,20 @@ namespace CommunityToolShedMvc.Controllers
                     ORDER BY ID
                 ");
 
+            Person person = DatabaseHelper.RetrieveSingle<Person>(@"
+                    SELECT Email
+                    FROM Person
+                    WHERE ID = @ID
+                ",
+                    new SqlParameter("@ID", ((CustomPrincipal)User).Person.Id)
+                );
 
-            var viewModel = new CommunityWithTypes(communityTypes);
+            var viewModel = new CommunityOwnerTypes(communityTypes, person);
             return View(viewModel);
         }
 
         [HttpPost]
-        public ActionResult Create(CommunityWithTypes viewModel)
+        public ActionResult Create(CommunityOwnerTypes viewModel)
         {
             if (ModelState.IsValid)
             {
