@@ -16,7 +16,7 @@
 }
 
 <h3>Community Tools</h3>
-<p>@Html.ActionLink("Add your own tools!", "")</p>
+<p>@Html.ActionLink("Add your own tools!", "Add", "Tool", new { communityid = Model.Community.ID}, null)</p>
 <div id="Tools" style="width:40%">
     <table class="table border table-sm">
         <thead>
@@ -25,6 +25,7 @@
                 <th>Owner</th>
                 <th>Condition</th>
                 <th>Warnings</th>
+                <th>&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -35,6 +36,7 @@
                     <td>@tool.OwnerName</td>
                     <td>@tool.ConditionName</td>
                     <td>@tool.Warnings</td>
+                    @*<td>@Html.ActionLink("View", "Overview", "Community", new { id = community.ID }, null)</td>*@
                 </tr>
             }
         </tbody>

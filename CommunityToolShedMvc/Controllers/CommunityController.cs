@@ -96,39 +96,30 @@ namespace CommunityToolShedMvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                //var id = DatabaseHelper.Insert(@"
-                //    INSERT INTO Community (Name, OwnerID, TypeID)
-                //    VALUES (@Name, @OwnerID, @TypeID)
-                //",
-                //    new SqlParameter("@Name", viewModel.Community.Name),
-                //    new SqlParameter("@OwnerID", ((CustomPrincipal)User).Person.Id),
-                //    new SqlParameter("@TypeID",viewModel.Community.TypeID)
-                //);
-
                 var id = DatabaseHelper.ExecuteScalar<int>(@"
-                BEGIN TRAN;
+                        BEGIN TRAN;
 
-                INSERT INTO Community (Name, OwnerID, TypeID)
-                VALUES (@CommunityName, @OwnerID, @TypeID);
+                        INSERT INTO Community (Name, OwnerID, TypeID)
+                        VALUES (@CommunityName, @OwnerID, @TypeID);
 
-                DECLARE @CommunityID int;
-                SET @CommunityId = cast(scope_identity() as int);
+                        DECLARE @CommunityID int;
+                        SET @CommunityID = cast(scope_identity() as int);
 
-                INSERT INTO CommunityMembers (CommunityID, PersonID, isApprover, isReviewer, isEnforcer)
-                VALUES (@CommunityID, @PersonID, @isApprover, @isReviewer, @isEnforcer);
+                        INSERT INTO CommunityMembers (CommunityID, PersonID, isApprover, isReviewer, isEnforcer)
+                        VALUES (@CommunityID, @PersonID, @isApprover, @isReviewer, @isEnforcer);
 
-                SELECT @CommunityID;
+                        SELECT @CommunityID;
 
-                COMMIT TRAN;
-            ",
-                new SqlParameter("@CommunityName", viewModel.Community.Name),
-                new SqlParameter("@OwnerID", ((CustomPrincipal)User).Person.Id),
-                new SqlParameter("@TypeID", viewModel.Community.TypeID),
-                new SqlParameter("@PersonID", ((CustomPrincipal)User).Person.Id),
-                new SqlParameter("@isApprover", true),
-                new SqlParameter("@isReviewer", true),
-                new SqlParameter("@isEnforcer", true)
-            );
+                        COMMIT TRAN;
+                    ",
+                        new SqlParameter("@CommunityName", viewModel.Community.Name),
+                        new SqlParameter("@OwnerID", ((CustomPrincipal)User).Person.Id),
+                        new SqlParameter("@TypeID", viewModel.Community.TypeID),
+                        new SqlParameter("@PersonID", ((CustomPrincipal)User).Person.Id),
+                        new SqlParameter("@isApprover", true),
+                        new SqlParameter("@isReviewer", true),
+                        new SqlParameter("@isEnforcer", true)
+                    );
 
                 return RedirectToAction("Overview", new { id = id });
             }

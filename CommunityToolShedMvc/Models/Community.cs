@@ -7,6 +7,7 @@ namespace CommunityToolShedMvc.Models
         public int ID { get; set; }
 
         [Required]
+        [Display(Name = "Community Name")]
         public string Name { get; set; }
         public int OwnerID { get; set; }
         public string OwnerName { get; set; }
