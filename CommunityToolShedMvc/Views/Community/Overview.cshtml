@@ -15,6 +15,34 @@
     <p>You are the owner of this community.</p>
 }
 
+<div class="pull-right">
+    @if (((CommunityToolShedMvc.Security.CustomPrincipal)User).IsInRole(Model.Community.ID, "Approver"))
+    {
+        <span>You are an Approver</span> 
+        if (((CommunityToolShedMvc.Security.CustomPrincipal)User).IsInRole(Model.Community.ID, "Reviewer"))
+        {
+            <span> and Reviewer</span>
+            if (((CommunityToolShedMvc.Security.CustomPrincipal)User).IsInRole(Model.Community.ID, "Enforcer"))
+            {
+                <span> and Enforcer</span>
+            }
+        }
+    }
+    else if (((CommunityToolShedMvc.Security.CustomPrincipal)User).IsInRole(Model.Community.ID, "Reviewer"))
+    {
+        <span>You are a Reviewer</span>
+        if (((CommunityToolShedMvc.Security.CustomPrincipal)User).IsInRole(Model.Community.ID, "Enforcer"))
+        {
+            <span> and Enforcer</span>
+        }
+    }
+    else if (((CommunityToolShedMvc.Security.CustomPrincipal)User).IsInRole(Model.Community.ID, "Enforcer"))
+    {
+        <span>You are an Enforcer</span>
+    }
+<span> in this community.</span>
+</div>
+
 @if (!((CommunityToolShedMvc.Security.CustomPrincipal)User).IsInCommunity(Model.Community.ID))
 {
 using (Html.BeginForm("Join", "Community", new { id = Model.Community.ID }, FormMethod.Post, null))
