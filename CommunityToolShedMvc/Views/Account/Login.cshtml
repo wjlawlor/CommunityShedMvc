@@ -10,19 +10,23 @@
 {
     @Html.ValidationSummary()
 
-    <div>
-        @Html.LabelFor(m => m.Email)
-        @Html.TextBoxFor(m => m.Email)
+    <div class="form-group row">
+        <div class="col-xs-3 ml-3">
+            @Html.LabelFor(m => m.Email)
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-xs-3 ml-3">
+            @Html.LabelFor(m => m.Password)
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+        </div>
     </div>
 
     <div>
-        @Html.LabelFor(m => m.Password)
-        @Html.PasswordFor(m => m.Password)
-    </div>
-
-    <div>
-        <button type="submit">Login</button>
+        <button type="submit" class="btn btn-success btn-lg">Login</button>
     </div>
 }
-
-<p>@Html.ActionLink("Register", "Register")</p>
+<br />
+<p>@Html.ActionLink("Don't have an account? Click here to register now!", "Register")</p>

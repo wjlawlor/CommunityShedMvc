@@ -56,5 +56,21 @@ namespace CommunityToolShedMvc.Security
 
             return roleFound;
         }
+
+        public bool IsInCommunity(int communityId)
+        {
+            bool communityFound = false;
+
+            foreach (var communityRole in person.Roles)
+            {
+                if (communityRole.CommunityID == communityId)
+                {
+                    communityFound = true;
+                    break;
+                }
+            }
+
+            return communityFound;
+        }
     }
 }

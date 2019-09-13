@@ -1,0 +1,103 @@
+﻿@model CommunityToolShedMvc.ViewModels.CommunityMembersTools
+
+@{
+    ViewBag.Title = Model.Community.Name;
+}
+
+<h2>@Model.Community.Name</h2>
+
+@if (Model.Community.OwnerID != (((CommunityToolShedMvc.Security.CustomPrincipal)User).Person.Id))
+ {
+    <p>The owner of this community is @Model.Community.OwnerName.</p>
+}
+@if (Model.Community.OwnerID == (((CommunityToolShedMvc.Security.CustomPrincipal)User).Person.Id))
+{
+    <p>You are the owner of this community.</p>
+}
+
+<div class="pull-right">
+    @if (((CommunityToolShedMvc.Security.CustomPrincipal)User).IsInRole(Model.Community.ID, "Approver"))
+    {
+        <span>You are an Approver</span> 
+        if (((CommunityToolShedMvc.Security.CustomPrincipal)User).IsInRole(Model.Community.ID, "Reviewer"))
+        {
+            <span> and Reviewer</span>
+            if (((CommunityToolShedMvc.Security.CustomPrincipal)User).IsInRole(Model.Community.ID, "Enforcer"))
+            {
+                <span> and Enforcer</span>
+            }
+        }
+    }
+    else if (((CommunityToolShedMvc.Security.CustomPrincipal)User).IsInRole(Model.Community.ID, "Reviewer"))
+    {
+        <span>You are a Reviewer</span>
+        if (((CommunityToolShedMvc.Security.CustomPrincipal)User).IsInRole(Model.Community.ID, "Enforcer"))
+        {
+            <span> and Enforcer</span>
+        }
+    }
+    else if (((CommunityToolShedMvc.Security.CustomPrincipal)User).IsInRole(Model.Community.ID, "Enforcer"))
+    {
+        <span>You are an Enforcer</span>
+    }
+<span> in this community.</span>
+</div>
+
+@if (!((CommunityToolShedMvc.Security.CustomPrincipal)User).IsInCommunity(Model.Community.ID))
+{
+using (Html.BeginForm("Join", "Community", new { id = Model.Community.ID }, FormMethod.Post, null))
+{
+    <div>
+        <button type="submit" class="btn btn-primary btn-lg pull-right">Join</button>
+    </div>
+}
+}
+
+<h3>Community Tools</h3>
+<p>@Html.ActionLink("Add your own tools!", "Add", "Tool", new { communityid = Model.Community.ID}, null)</p>
+<div id="Tools" style="width:40%">
+    <table class="table border table-sm">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Owner</th>
+                <th>Condition</th>
+                <th>Warnings</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tool in Model.Tools)
+            {
+                <tr>
+                    <td>@tool.Name</td>
+                    <td>@tool.OwnerName</td>
+                    <td>@tool.ConditionName</td>
+                    <td>@tool.Warnings</td>
+                    <td>@Html.ActionLink("Edit", "Edit", "Tool", new { communityid = Model.Community.ID, id = tool.ID }, null)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<h3>Community Members</h3>
+<div id="Members" style="width:20%">
+    <table class="table border table-sm">
+        <thead>
+            <tr>
+                <th>Members</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in Model.Members)
+            {            
+                    <tr>
+                        <td>@person.LastName, @person.FirstName </td>
+                    </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<p>@Html.ActionLink("List of Communities", "Index", null, new { @class="btn btn-primary" })</p>
