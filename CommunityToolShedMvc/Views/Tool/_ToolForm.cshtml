@@ -1,0 +1,47 @@
+﻿@model CommunityToolShedMvc.ViewModels.ToolPersonCommunityConditions
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary()
+
+    <div class="form-group row">
+        <div class="col-xs-3 ml-3">
+            @Html.LabelFor(m => m.Person.FullName)
+            @Html.TextBoxFor(m => m.Person.FullName, new { @class = "form-control", disabled = "true" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-xs-3 ml-3">
+            @Html.LabelFor(m => m.Community.Name)
+            @Html.TextBoxFor(m => m.Community.Name, new { @class = "form-control", disabled = "true" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-xs-3 ml-3">
+            @Html.LabelFor(m => m.Tool.Name)
+            @Html.TextBoxFor(m => m.Tool.Name, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-xs-3 ml-3">
+            @Html.LabelFor(m => m.Tool.ConditionID)
+            @Html.DropDownListFor(m => m.Tool.ConditionID, Model.TypeSelectList, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-xs-3 ml-3">
+            @Html.LabelFor(m => m.Tool.Warnings)
+            @Html.TextAreaFor(m => m.Tool.Warnings, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div>
+        <button type="submit" class="btn btn-success btn-lg">Submit</button>
+    </div>
+}
+<br />
+<p>@Html.RouteLink("Cancel", "Default", new { controller = "Community", action = "Overview", id = Model.Community.ID }, new { @class = "btn btn-danger btn-lg" })</p>

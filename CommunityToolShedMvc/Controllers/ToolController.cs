@@ -42,7 +42,7 @@ namespace CommunityToolShedMvc.Controllers
                 );
 
             Community community = DatabaseHelper.RetrieveSingle<Community>(@"
-                    SELECT Name
+                    SELECT Name, ID
                     FROM Community
                     WHERE ID = @ID
                 ",
@@ -82,7 +82,6 @@ namespace CommunityToolShedMvc.Controllers
                     );
 
                 return RedirectToRoute("Default", new { controller = "Community", action = "Overview", id = communityid });
-                //return RedirectToAction("Overview", "Community", new { id = communityid });
             }
 
             List<ConditionType> conditionTypes = DatabaseHelper.Retrieve<ConditionType>(@"
@@ -92,6 +91,101 @@ namespace CommunityToolShedMvc.Controllers
                 ");
 
             viewModel.SetConditionTypes(conditionTypes);
+            return View(viewModel);
+        }
+
+
+        public ActionResult Edit(int communityid, int id)
+        {
+            List<ConditionType> conditionTypes = DatabaseHelper.Retrieve<ConditionType>(@"
+                    SELECT ID, Name
+                    FROM Condition
+                    ORDER BY ID
+                ");
+
+            Person person = DatabaseHelper.RetrieveSingle<Person>(@"
+                    SELECT CONCAT(FirstName,' ',LastName) AS FullName
+                    FROM Person
+                    WHERE ID = @ID
+                ",
+                    new SqlParameter("@ID", ((CustomPrincipal)User).Person.Id)
+                );
+
+            Community community = DatabaseHelper.RetrieveSingle<Community>(@"
+                    SELECT Name, ID
+                    FROM Community
+                    WHERE ID = @ID
+                ",
+                    new SqlParameter("@ID", communityid)
+                );
+
+            var viewModel = new ToolPersonCommunityConditions(conditionTypes, person, community);
+
+            viewModel.Tool = DatabaseHelper.RetrieveSingle<Tool>(@"
+                    SELECT Name, ConditionID, Warnings
+                    FROM Tool
+                    WHERE ID = @ID
+                ",
+                    new SqlParameter("@ID", id)
+                );
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(int communityid, int id, ToolPersonCommunityConditions viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                DatabaseHelper.Update(@"
+                        UPDATE Tool SET
+                            Name = @Name,
+                            ConditionID = @ConditionID,
+                            Warnings = @Warnings
+                        WHERE ID = @ID
+                    ",
+
+                        new SqlParameter("@Name", viewModel.Tool.Name),
+                        new SqlParameter("@ConditionID", viewModel.Tool.ConditionID),
+                        new SqlParameter("@Warnings", viewModel.Tool.Warnings),
+                        new SqlParameter("@ID", id)
+                    );
+
+                return RedirectToRoute("Default", new { controller = "Community", action = "Overview", id = communityid });
+            }
+
+            List<ConditionType> conditionTypes = DatabaseHelper.Retrieve<ConditionType>(@"
+                    SELECT ID, Name
+                    FROM Condition
+                    ORDER BY ID
+                ");
+
+            Person person = DatabaseHelper.RetrieveSingle<Person>(@"
+                    SELECT CONCAT(FirstName,' ',LastName) AS FullName
+                    FROM Person
+                    WHERE ID = @ID
+                ",
+                    new SqlParameter("@ID", ((CustomPrincipal)User).Person.Id)
+                );
+
+            Community community = DatabaseHelper.RetrieveSingle<Community>(@"
+                    SELECT Name
+                    FROM Community
+                    WHERE ID = @ID
+                ",
+                    new SqlParameter("@ID", communityid)
+                );
+
+            viewModel = new ToolPersonCommunityConditions(conditionTypes, person, community);
+
+            viewModel.Tool = DatabaseHelper.RetrieveSingle<Tool>(@"
+                    SELECT Name, ConditionID, Warnings
+                    FROM Tool
+                    WHERE ID = @ID
+                ",
+                    new SqlParameter("@ID", id)
+                );
+
             return View(viewModel);
         }
     }

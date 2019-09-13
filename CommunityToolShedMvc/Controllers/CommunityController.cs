@@ -133,5 +133,22 @@ namespace CommunityToolShedMvc.Controllers
             viewModel.SetCommunityTypes(communityTypes);
             return View(viewModel);
         }
+
+        [HttpPost]
+        public ActionResult Join(int id)
+        {
+            DatabaseHelper.Insert(@"
+                    INSERT INTO CommunityMembers (CommunityID, PersonID, isApprover, isReviewer, isEnforcer)
+                    VALUES (@CommunityID, @PersonID, @isApprover, @isReviewer, @isEnforcer)
+                ",
+                    new SqlParameter("@CommunityID", id),
+                    new SqlParameter("@PersonID", ((CustomPrincipal)User).Person.Id),
+                    new SqlParameter("isApprover", false),
+                    new SqlParameter("isReviewer", false),
+                    new SqlParameter("isEnforcer", false)
+                );
+
+            return RedirectToAction("Overview", new { id = id });
+        }
     }
 }

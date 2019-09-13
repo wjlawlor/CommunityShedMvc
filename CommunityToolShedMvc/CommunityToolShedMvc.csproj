@@ -156,6 +156,8 @@
     <Content Include="Views\Community\Create.cshtml" />
     <Content Include="Views\Tool\Index.cshtml" />
     <Content Include="Views\Tool\Add.cshtml" />
+    <Content Include="Views\Tool\_ToolForm.cshtml" />
+    <Content Include="Views\Tool\Edit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -14,6 +14,8 @@ namespace CommunityToolShedMvc.Models
         public string Email { get; set; }
         public string Password { get; set; }
 
+        public bool IsAMember { get; set; }
+
         public List<CommunityRole> Roles { get; set; }
     }
 }
