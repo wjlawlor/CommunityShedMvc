@@ -1,15 +1,37 @@
-﻿@model CommunityToolShedMvc.Models.Community
+﻿@model CommunityToolShedMvc.ViewModels.CommunityMembersTools
 
 @{
-    ViewBag.Title = Model.Name;
+    ViewBag.Title = Model.Community.Name;
 }
 
-<h2>@Model.Name</h2>
+<h2>@Model.Community.Name</h2>
 
-@if (Model.OwnerID != (((CommunityToolShedMvc.Security.CustomPrincipal)User).Person.Id)){
-    <p>The owner of this community is @Model.OwnerName.</p>
+@if (Model.Community.OwnerID != (((CommunityToolShedMvc.Security.CustomPrincipal)User).Person.Id))
+ {
+    <p>The owner of this community is @Model.Community.OwnerName.</p>
 }
-@if (Model.OwnerID == (((CommunityToolShedMvc.Security.CustomPrincipal)User).Person.Id))
+@if (Model.Community.OwnerID == (((CommunityToolShedMvc.Security.CustomPrincipal)User).Person.Id))
 {
     <p>You are the owner of this community.</p>
 }
+
+<div id="Members" style="width:20%">
+    <table class="table border table-sm">
+        <thead>
+            <tr>
+                <th>Members</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in Model.Members)
+            {            
+                    <tr>
+                        <td>@person.LastName, @person.FirstName </td>
+                        @*<td>@Html.ActionLink("View", "Overview", "Community", new { id = community.ID }, null)</td>*@
+                    </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<p>@Html.ActionLink("List of Communities", "Index", null, new { @class="btn btn-primary" })</p>
